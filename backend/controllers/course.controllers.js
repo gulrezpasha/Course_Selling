@@ -108,3 +108,18 @@ export const getCourse=async(req,res)=>{
         console.log("fail to get courses",error);
     }
 };
+
+export const courseDetails=async (req,res) => {
+  const {courseId}=req.params;
+    try {
+        const course =await Course.findById(courseId);
+        if(!course){
+          res.status(201).json({errors:" cousre not found"});
+        }
+        res.status(201).json({course});
+    } catch (error) {
+      res.status(404).json({errors:"error in finding course"});
+      console.log("error in cousre finding",error);
+    }
+};
+
