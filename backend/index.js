@@ -5,7 +5,9 @@ import { v2 as cloudinary } from 'cloudinary';
 import fileUpload from 'express-fileupload';
 import courseRoute from './routes/course.routes.js';
 import userRoute from './routes/user.routes.js';
-
+import adminRoute from './routes/admin.routes.js'
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 const app=express();
 dotenv.config();
 const port=process.env.PORT||3000;
@@ -19,14 +21,23 @@ try {
 }
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(fileUpload({
     useTempFiles : true,
     tempFileDir : '/tmp/'
 }));
+app.use(cors({
+     origin:process.env.FRONTEND_URL,
+     credentials:true,
+     methods:["GET","POST","DELETE","PUT"],
+     allowedHeaders:["Content-Type","Authorization"],
+     
+}))
 
 app.use("/api/v1/course",courseRoute);
 app.use("/api/v1/user",userRoute);
+app.use("/api/v1/admin",adminRoute);
 
     // Configuration
     cloudinary.config({ 
