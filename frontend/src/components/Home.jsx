@@ -96,9 +96,49 @@ import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import axios from 'axios';
 import Slider from "react-slick";
+import toast from "react-hot-toast";
 
 function Home() {
     const [courses, setCourses] = useState([]);
+    const [isLoggedIn,setIsLoggedIn]=useState(false);
+
+
+    useEffect(()=>{
+      const token=localStorage.getItem('user');
+      if(token){
+        setIsLoggedIn(true);
+      }else{
+        setIsLoggedIn(false);
+      }
+    },[]);
+
+// const handleLogOut=async ()=>{
+//   try {
+//     const response = await axios.post(
+//   'http://localhost:4001/api/v1/user/logout',
+//   {}, // empty body
+//   {
+//     withCredentials: true,
+//   }
+// );
+
+//     toast.success((await response).data.message);
+//     setIsLoggedIn(false);
+
+//   } catch (error) {
+//     console.log("error in logging out",error);
+//     toast.success(error.response.data.errors || "error in logging out");
+//   }
+// }
+
+
+const handleLogOut = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  setIsLoggedIn(false);
+  toast.success("Logged out successfully");
+};
+
 useEffect(() => {
     
   const fetchCourses = async () => {
@@ -161,7 +201,17 @@ var settings = {
                     <h1 className="text-2xl font-bold text-orange-400">SkillUp</h1>
                 </div>
                 <div className="flex gap-4">
-                    <Link
+                    {isLoggedIn ?(
+                     <button onClick={handleLogOut}
+                       className="border border-white rounded px-4 py-2 hover:bg-white hover:text-black transition duration-300"
+                       >
+                        Logout
+                     </button>
+                       
+                    
+                    ):(
+                      <>
+                      <Link
                         to="/login"
                         className="border border-white rounded px-4 py-2 hover:bg-white hover:text-black transition duration-300"
                     >
@@ -173,6 +223,8 @@ var settings = {
                     >
                         Signup
                     </Link>
+                      </>
+                    )}
                 </div>
             </header>
 

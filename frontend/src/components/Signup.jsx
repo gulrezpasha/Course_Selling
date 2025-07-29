@@ -11,8 +11,10 @@
 // export default Signup
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.jpg';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -21,6 +23,7 @@ function Signup() {
     email: '',
     password: ''
   });
+  const navigate=useNavigate();
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -29,11 +32,29 @@ function Signup() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Signup data:", formData);
-    // You can now send data to backend API using axios.post()
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("Signup data:", formData);
+  //   // You can now send data to backend API using axios.post()
+  // };
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await axios.post('http://localhost:4001/api/v1/user/signup', formData);
+    console.log("Server Response:", response.data);
+
+    // Show success message or redirect
+    toast.success(response.data.message);
+    navigate('/login');
+  } catch (error) {
+    console.error("Error during signup:", error.response?.data || error.message);
+    // alert("Signup failed. Please try again.");
+    alert(error.response.data.errors);
+  }
+};
+
 
   return (
     <div className="bg-gradient-to-r from-black to-blue-950 min-h-screen text-white flex flex-col">

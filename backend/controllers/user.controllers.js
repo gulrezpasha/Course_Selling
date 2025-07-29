@@ -29,7 +29,7 @@ if(!validateData.success){
     try {
         const existingUser= await User.findOne({email:email});
         if(existingUser){
-           return res.status(201).json({errors:"User already exist"});
+           return res.status(400).json({errors:"User already exist"});
         }
         const newUser=new User({firstName,lastName,email,password:hashedpassword});
         await newUser.save();
@@ -40,46 +40,104 @@ if(!validateData.success){
     }
 }
 
-export const login=async(req,res)=>{
-    const {email,password}=req.body;
-    try {
-        const user=await User.findOne({email:email});
-        const ispasswordcorrect=await bcrypt.compare(password,user.password);
+// export const login=async(req,res)=>{
+//     const {email,password}=req.body;
+//     try {
+//         const user=await User.findOne({email:email});
+//         const ispasswordcorrect=await bcrypt.compare(password,user.password);
 
-        if (!user || !ispasswordcorrect){
-           return  res.status(403).json({errors:"Invalid Credentials"});
-        }
-const token=jwt.sign({
-    id:user._id,
+//         if (!user || !ispasswordcorrect){
+//            return  res.status(403).json({errors:"Invalid Credentials"});
+//         }
+// const token=jwt.sign({
+//     id:user._id,
     
-},config.JWT_USER_PASSWORD,
-{expiresIn:"1D"});
-const cookieOptions={
-    expires:new Date(Date.now()+24*60*1000),  // 1 day
-    httpOnly:true, // can't be accessed via js directly
-    secure:process.env.NODE_ENV==="production", // true for https only
-    sameSite:"Strict" // CSRF attacks
-};
-res.cookie("jwt",token);
-        res.status(201).json({message:"login suuccessfull",user,token});
-    } catch (error) {
-        res.status(403).json({errors:"error in login"})
-        console.log("error in login",error);
-    }
-}
+// },config.JWT_USER_PASSWORD,
+// {expiresIn:"1D"});
+// const cookieOptions={
+//     expires:new Date(Date.now()+24*60*1000),  // 1 day
+//     httpOnly:true, // can't be accessed via js directly
+//     secure:process.env.NODE_ENV==="production", // true for https only
+//     sameSite:"Strict" // CSRF attacks
+// };
+// res.cookie("jwt",token);
+//         res.status(201).json({message:"login suuccessfull",user,token});
+//     } catch (error) {
+//         res.status(403).json({errors:"Error in login"})
+//         console.log("error in login",error);
+//     }
+// }
 
-export const logout=async(req,res)=>{
-    try {
-        if(!req.cookies.jwt){
-     return res.status(403).json({errors:"please login first"});
-        }
-        res.clearCookie("jwt");
-        res.status(201).json({message:"log Out successfully"});
-    } catch (error) {
-        res.status(403).json({errors:"error in logout"});
-        console.log("error in logout",error);
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(403).json({ errors: "Invalid Credentials" });
     }
-}
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(403).json({ errors: "Invalid Credentials" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id },
+      config.JWT_USER_PASSWORD,
+      { expiresIn: "1d" }
+    );
+
+    const cookieOptions = {
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // true only in prod HTTPS
+      sameSite: "Strict",
+    };
+
+    res.cookie("jwt", token, cookieOptions);
+
+    res.status(201).json({ message: "login successful", user, token });
+  } catch (error) {
+    res.status(403).json({ errors: "Error in login" });
+    console.log("error in login", error);
+  }
+};
+
+
+
+// export const logout=async(req,res)=>{
+//     try {
+//         if(!req.cookies.jwt){
+//      return res.status(403).json({errors:"please login first"});
+//         }
+//         res.clearCookie("jwt");
+//         res.status(201).json({message:"log Out successfully"});
+//     } catch (error) {
+//         res.status(403).json({errors:"error in logout"});
+//         console.log("error in logout",error);
+//     }
+// }
+
+
+export const logout = async (req, res) => {
+  try {
+    if (!req.cookies?.jwt) {
+      return res.status(403).json({ errors: "Please login first" });
+    }
+
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: "Strict",
+      secure: process.env.NODE_ENV === "production"
+    });
+
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.log("error in logout", error);
+    res.status(500).json({ errors: "Error in logout" });
+  }
+};
+
 
 export const purchases=async (req,res)=>{
     const userId=req.userId;
