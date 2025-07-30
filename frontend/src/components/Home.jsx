@@ -1,89 +1,3 @@
-// import React from 'react'
-// import logo from "../../public/logo.jpg"
-// import { Link } from 'react-router-dom'
-// import { FaFacebook } from "react-icons/fa";
-// import { FaInstagram } from "react-icons/fa";
-// import { FaXTwitter } from "react-icons/fa6";
-
-// function Home() {
-//     return (
-//         <div className='bg-gradient-to-r from-black to-blue-950 '>
-//             <div className='h-screen text-white '>
-//                 <header className='w-full max-w-screen-xl mx-auto px-6 py-4 flex items-center justify-between'>
-//                     <div className='flex items-center space-x-2'>
-//                         <img src={logo} alt="" className='w-10 h-10 rounded-full' />
-//                         <h1 className='text-2xl text-orange-400 font-bold'>SkillUp</h1>
-//                     </div>
-//                     <div className='space-x-4'>
-//                         <Link to="/login" className='bg-transparent text-white border border-white rounded px-4 py-2'>Login</Link>
-//                         <Link to="/signup" className='bg-transparent text-white border border-white rounded px-4 py-2'>Signup</Link>
-
-//                     </div>
-//                 </header>
-
-//                 <section className='text-center py-20'>
-//                     <h1 className='text-4xl font-semibold text-orange-400'>SkillUp</h1>
-//                     <br />
-//                     <br />
-//                     <p className='text-gray-400'>Sharpen your skills with course crafted by industry leading experts</p>
-
-//                     <div className='space-x-4 mt-6'>
-//                         <button className='bg-green-500 text-white py-3 px-6 rounded font-semibold hover:bg-white duration-300 hover:text-black'>Explore Courses</button>
-//                         <button className='bg-white text-black py-3 px-6 rounded font-semibold hover:bg-green-500 duration-300 hover:text-white'>Courses Videos</button>
-//                     </div>
-//                 </section>
-//                 <section>
-
-//                 </section>
-
-
-//                 <footer >
-//                     <div className='grid grid-cols-1 md:grid-cols-3'>
-//                         <div className='flex flex-col items-center'>
-
-//                             <div className='flex items-center space-x-2'>
-//                                 <img src={logo} alt="" className='w-10 h-10 rounded-full' />
-//                                 <h1 className='text-2xl text-orange-400 font-bold'>
-//                                     SkillUp
-//                                 </h1>
-//                             </div>
-//                             <div className='mt-3 ml-3'>
-//                                 <p className='mb-2'>Follow us</p>
-//                                 <div className='flex space-x-4'>
-//                                     <a href=""><FaFacebook className='text-2xl hover:text-blue-400  cursor-pointer' /></a>
-//                                     <a href=""><FaInstagram className='text-2xl hover:text-pink-400  cursor-pointer' /></a>
-//                                     <a href=""><FaXTwitter className='text-2xl hover:text-slate-400 cursor-pointer ' /></a>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                         <div className='items-center flex flex-col'>
-//                             <h2 className='text-lg font-semibold mb-3'>
-//                                 Connects</h2>
-//                             <ul className='space-y-1 text-gray-400'>
-//                                 <li className='hover:text-white cursor-pointer'>Youtube-SkillUp</li>
-//                                 <li className='hover:text-white cursor-pointer'>telegram-SkillUp</li>
-//                                 <li className='hover:text-white cursor-pointer'>Github-SkillUp</li>
-//                             </ul>
-//                         </div>
-
-//                         <div className='items-center flex flex-col'>
-//                             <h2 className='text-lg font-semibold mb-3'>
-//                                 Copyright &#169; 2025 </h2>
-//                             <ul className='space-y-1 text-gray-400'>
-//                                 <li className='hover:text-white cursor-pointer'>Terms & Conditions</li>
-//                                 <li className='hover:text-white cursor-pointer'>Privacy Policy</li>
-//                                 <li className='hover:text-white cursor-pointer'>Refund & Cancellations</li>
-//                             </ul>
-//                         </div>
-//                     </div>
-//                 </footer>
-//             </div>
-//         </div>
-//     )
-// }
-
-// export default Home
-
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -112,24 +26,6 @@ function Home() {
       }
     },[]);
 
-// const handleLogOut=async ()=>{
-//   try {
-//     const response = await axios.post(
-//   'http://localhost:4001/api/v1/user/logout',
-//   {}, // empty body
-//   {
-//     withCredentials: true,
-//   }
-// );
-
-//     toast.success((await response).data.message);
-//     setIsLoggedIn(false);
-
-//   } catch (error) {
-//     console.log("error in logging out",error);
-//     toast.success(error.response.data.errors || "error in logging out");
-//   }
-// }
 
 
 const handleLogOut = () => {
@@ -235,12 +131,12 @@ var settings = {
                     Sharpen your skills with courses crafted by industry-leading experts.
                 </p>
                 <div className="flex justify-center gap-4 mt-8 flex-wrap">
-                    <button className="bg-green-500 text-white py-3 px-6 rounded font-semibold hover:bg-white hover:text-black transition duration-300">
+                    <Link to={"/courses"} className="bg-green-500 text-white py-3 px-6 rounded font-semibold hover:bg-white hover:text-black transition duration-300">
                         Explore Courses
-                    </button>
-                    <button className="bg-white text-black py-3 px-6 rounded font-semibold hover:bg-green-500 hover:text-white transition duration-300">
+                    </Link>
+                    <Link to={'https://www.youtube.com/results?search_query=a2z+dsa'} className="bg-white text-black py-3 px-6 rounded font-semibold hover:bg-green-500 hover:text-white transition duration-300">
                         Course Videos
-                    </button>
+                    </Link>
                 </div>
             </section>
             <section className="w-full max-w-[1224px] mx-auto p-4">
