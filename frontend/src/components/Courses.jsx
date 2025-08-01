@@ -51,19 +51,13 @@ function Courses() {
   }, []);
 
   // Logout
-  const handleLogout = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/user/logout`, {
-        withCredentials: true,
-      });
-      toast.success(response.data.message);
-      localStorage.removeItem("user");
-      setIsLoggedIn(false);
-    } catch (error) {
-      console.log("Error in logging out ", error);
-      toast.error(error.response.data.errors || "Error in logging out");
-    }
-  };
+ const handleLogOut = () => {
+   localStorage.removeItem('token');
+   localStorage.removeItem('user');
+   setIsLoggedIn(false);
+   toast.success("Logged out successfully");
+ };
+ 
 
   // Toggle sidebar for mobile devices
   const toggleSidebar = () => {
@@ -116,7 +110,7 @@ function Courses() {
                 <Link to={"/"}
                   
                   className="flex items-center"
-                  onClick={handleLogout}
+                  onClick={handleLogOut}
                 >
                   <IoLogOut className="mr-2" /> Logout
                 </Link>

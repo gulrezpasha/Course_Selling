@@ -28,11 +28,10 @@ function Login() {
       const response = await axios.post('http://localhost:4001/api/v1/user/login', formData);
       console.log("Login Success:", response.data);
       toast.success("Login Success");
-      localStorage.setItem("user",JSON.stringify(response.data.token));
+localStorage.removeItem("user"); // optional cleanup
+localStorage.setItem("user", response.data.token); // no stringify!
+navigate('/');
 
-      // You can redirect here (e.g. to dashboard)
-      // navigate("/dashboard");
-      navigate('/');
     } catch (error) {
       console.error("Login Error:", error.response?.data || error.message);
       setErrorMsg(error.response?.data?.errors || "Login failed. Please try again.");

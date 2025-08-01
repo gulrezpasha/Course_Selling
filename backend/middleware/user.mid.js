@@ -7,7 +7,7 @@ const authHeader=req.headers.authorization;
 
 
 if(!authHeader || !authHeader.startsWith("Bearer")){
-    return res.status(403).json({errors:"No token provided"});
+    return res.status(401).json({errors:"No token provided"});
 }
 const token=authHeader.split(" ")[1];
 
@@ -17,7 +17,7 @@ try {
    req.userId=decoded.id;
    next();
 } catch (error) {
-    res.status(403).json({errors:"Invalid token "});
+    res.status(401).json({errors:"Invalid token "});
     console.log("Invalid token or expired token",error);
 }
 

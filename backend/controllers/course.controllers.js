@@ -140,11 +140,11 @@ export const buyCourse=async (req,res)=>{
     try {
        const course =await Course.findById(courseId);
        if(!course){
-        return res.status(403).json({error:"Course not found"});
+        return res.status(403).json({errors:"Course not found"});
        }
        const existingPurchase=await Purchase.findOne({userId,courseId});
        if(existingPurchase){
-        return res.status(201).json({error:"course is already purchased"});
+        return res.status(400).json({errors:"course is already purchased"});
        }
     const newPurchase= new Purchase({userId,courseId});
     await newPurchase.save();
