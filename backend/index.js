@@ -8,6 +8,7 @@ import userRoute from './routes/user.routes.js';
 import adminRoute from './routes/admin.routes.js'
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import paymentRoutes from "./routes/paymentRoutes.js";
 const app=express();
 dotenv.config();
 const port=process.env.PORT||3000;
@@ -38,6 +39,7 @@ app.use(cors({
 app.use("/api/v1/course",courseRoute);
 app.use("/api/v1/user",userRoute);
 app.use("/api/v1/admin",adminRoute);
+app.use("/api/paypal", paymentRoutes);
 
     // Configuration
     cloudinary.config({ 

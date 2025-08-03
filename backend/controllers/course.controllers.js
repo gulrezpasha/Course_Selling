@@ -132,25 +132,132 @@ export const courseDetails=async (req,res) => {
 };
 
 
-export const buyCourse=async (req,res)=>{
-   const userId = req.userId;
+// export const buyCourse=async (req,res)=>{
+//    const userId = req.userId;
 
-   const courseId = req.params.courseId;
+//    const courseId = req.params.courseId;
 
-    try {
-       const course =await Course.findById(courseId);
-       if(!course){
-        return res.status(403).json({errors:"Course not found"});
-       }
-       const existingPurchase=await Purchase.findOne({userId,courseId});
-       if(existingPurchase){
-        return res.status(400).json({errors:"course is already purchased"});
-       }
-    const newPurchase= new Purchase({userId,courseId});
-    await newPurchase.save();
-    res.status(201).json({message:"course purchased successfully",newPurchase});
-    } catch (error) {
-      res.status(403).json({errors:"error in course buying"});
-      console.log("error in course buying",error);
+//     try {
+//        const course =await Course.findById(courseId);
+//        if(!course){
+//         return res.status(403).json({errors:"Course not found"});
+//        }
+//        const existingPurchase=await Purchase.findOne({userId,courseId});
+//        if(existingPurchase){
+//         return res.status(400).json({errors:"course is already purchased"});
+//        }
+//     const newPurchase= new Purchase({userId,courseId});
+//     await newPurchase.save();
+//     res.status(201).json({message:"course purchased successfully",newPurchase});
+//     } catch (error) {
+//       res.status(403).json({errors:"error in course buying"});
+//       console.log("error in course buying",error);
+//     }
+// };
+
+
+
+
+// export const buyCourse = async (req, res) => {
+//   const userId = req.userId;
+//   const courseId = req.params.courseId;
+//   const { demo } = req.body; // read demo flag
+
+//   try {
+//     const course = await Course.findById(courseId);
+//     if (!course) return res.status(403).json({ errors: "Course not found" });
+
+//     const existingPurchase = await Purchase.findOne({ userId, courseId });
+//     if (existingPurchase)
+//       return res.status(400).json({ errors: "Course already purchased" });
+
+//     // Optional: if not demo, you can add more validations like verifying PayPal orderID etc
+
+//     const newPurchase = new Purchase({ userId, courseId, demoPurchase: !!demo }); // save demo flag if needed
+//     await newPurchase.save();
+
+//     res.status(201).json({ message: demo ? "Demo purchase successful" : "Course purchased successfully", newPurchase });
+//   } catch (error) {
+//     res.status(403).json({ errors: "Error in course buying" });
+//     console.log("error in course buying", error);
+//   }
+// };
+
+
+
+// export const buyCourse = async (req, res) => {
+//   const userId = req.userId;
+//   const courseId = req.params.courseId;
+//   const isDemo = req.body.demo; // <-- capture demo flag
+
+//   try {
+//     const course = await Course.findById(courseId);
+//     if (!course) {
+//       return res.status(403).json({ errors: "Course not found" });
+//     }
+
+//     const existingPurchase = await Purchase.findOne({ userId, courseId });
+//     if (existingPurchase) {
+//       return res.status(400).json({ errors: "Course is already purchased" });
+//     }
+
+//     // If demo mode, just simulate success (DON'T save in DB)
+//     if (isDemo) {
+//       return res.status(200).json({ message: "Demo purchase simulated successfully (no real payment)" });
+//     }
+
+//     // Actual saving if not demo
+//     const newPurchase = new Purchase({ userId, courseId });
+//     await newPurchase.save();
+
+//     res.status(201).json({ message: "Course purchased successfully", newPurchase });
+//   } catch (error) {
+//     console.error("Error in course buying:", error);
+//     res.status(500).json({ errors: "Error in course buying" });
+//   }
+// };
+
+
+
+
+export const buyCourse = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const courseId = req.params.id;
+    const { demo } = req.body;
+
+    // If it's a demo purchase, simulate success
+    if (demo) {
+      console.log("✅ Demo purchase detected");
+      return res.status(200).json({ message: "Demo purchase simulated successfully" });
     }
+
+    // Check if course exists
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    // Check if already purchased
+    const existingPurchase = await Purchase.findOne({ user: userId, course: courseId });
+    if (existingPurchase) {
+      return res.status(400).json({ message: "Course already purchased" });
+    }
+
+    // Create actual purchase entry (for real payment flow)
+    const purchase = new Purchase({
+      user: userId,
+      course: courseId,
+      paymentMethod: "paypal",
+      paymentStatus: "completed",
+    });
+    await purchase.save();
+
+    return res.status(200).json({ message: "Course purchased successfully" });
+  } catch (error) {
+    console.error("Buy course error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
+
+
