@@ -282,7 +282,9 @@ function Buy() {
   const [loading, setLoading] = useState(true);
   const [demoMode, setDemoMode] = useState(false);
   const navigate = useNavigate();
-  const token = localStorage.getItem("user");
+  // const token = localStorage.getItem("user");
+ 
+
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -290,10 +292,12 @@ function Buy() {
         const { data } = await axios.get(
           `http://localhost:4001/api/v1/course/${courseId}`
         );
+        
+
         setCourse(data.course);
         setLoading(false);
       } catch (error) {
-        toast.error("Course not found!");
+        toast.error("Course not found!",error);
         navigate("/");
       }
     };
@@ -301,6 +305,8 @@ function Buy() {
   }, [courseId, navigate]);
 
   const handlePurchase = async () => {
+    const token = localStorage.getItem("token");
+
     try {
       const { data } = await axios.post(
         `http://localhost:4001/api/v1/course/buyCourse/${courseId}`,
@@ -326,10 +332,15 @@ function Buy() {
     }
   };
 
- const handleDemoPurchase = async () => {
+const handleDemoPurchase = async () => {
   try {
-    setloading(true);
+    setLoading(true);  // capital L
+    // const user = JSON.parse(localStorage.getItem("user"));
+    // const token = user?.token;
     const token = localStorage.getItem("token");
+
+
+    console.log("Token:", token);
 
     const { data } = await axios.post(
       `http://localhost:4001/api/v1/course/buyCourse/${courseId}`,
@@ -348,9 +359,10 @@ function Buy() {
     console.error("❌ Demo Purchase Error:", error.response?.data || error.message);
     toast.error("Demo purchase failed");
   } finally {
-    setloading(false);
+    setLoading(false);  // capital L
   }
 };
+
 
 
   if (loading)

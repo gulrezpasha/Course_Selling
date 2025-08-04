@@ -26,16 +26,20 @@ function Login() {
 
     try {
       const response = await axios.post('http://localhost:4001/api/v1/user/login', formData);
-      console.log("Login Success:", response.data);
+     console.log("Login Success:", response.data); 
       toast.success("Login Success");
-localStorage.removeItem("user"); // optional cleanup
-localStorage.setItem("user", response.data.token); // no stringify!
+localStorage.setItem("token", response.data.token); // ✅ Save token
+localStorage.setItem("user", JSON.stringify(response.data.user)); // ✅ Save user info
+
 navigate('/');
 
     } catch (error) {
       console.error("Login Error:", error.response?.data || error.message);
       setErrorMsg(error.response?.data?.errors || "Login failed. Please try again.");
     }
+
+
+
   };
 
   return (

@@ -55,8 +55,10 @@ function UpdateCourse() {
     if (image) {
       formData.append("imageUrl", image);
     }
-    const admin = JSON.parse(localStorage.getItem("admin"));
-    const token = admin.token;
+    // const admin = JSON.parse(localStorage.getItem("admin"));
+    // const token = admin.token;
+    const token = localStorage.getItem("admin");
+
     if (!token) {
       toast.error("Please login to admin");
       return;
@@ -73,7 +75,7 @@ function UpdateCourse() {
         }
       );
       toast.success(response.data.message || "Course updated successfully22");
-      navigate("/admin/our-courses"); // Redirect to courses page after update
+      navigate("/admin/our_courses"); // Redirect to courses page after update
     } catch (error) {
       console.error(error);
       toast.error(error.response.data.errors);

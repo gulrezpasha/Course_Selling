@@ -19,7 +19,7 @@ function App() {
 
 const user=localStorage.getItem('user');
 // const admin=localStorage.getItem('admin');
-const isAdminLoggedIn = Boolean(localStorage.getItem("admin"));
+// const isAdminLoggedIn = Boolean(localStorage.getItem("admin"));
 
 console.log("admin value:", localStorage.getItem("admin"));
 
@@ -42,7 +42,7 @@ console.log("admin value:", localStorage.getItem("admin"));
 
         <Route path='/admin/signup' element={<AdminSignup/>}></Route>
         <Route path='/admin/login' element={<AdminLogin/>}></Route>
-        <Route path='/admin/dashboard' element={isAdminLoggedIn? <Dashboard/>:<Navigate to={'/admin/login'}/>}></Route>
+        <Route path='/admin/dashboard' element={<Dashboard/>}></Route>
         <Route path='/admin/create_course' element={<CourseCreate/>}></Route>
         <Route path='/admin/update_course/:id' element={<UpdateCourse/>}></Route>
         <Route path='/admin/our_courses' element={<OurCourses/>}></Route>

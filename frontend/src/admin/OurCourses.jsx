@@ -23,8 +23,7 @@ function OurCourses() {
 //   }, [token, navigate]);
 
 
-
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("admin");
 
 useEffect(() => {
   if (!token) {
@@ -41,9 +40,6 @@ useEffect(() => {
         },
         withCredentials: true,
       });
-      console.log("Raw API response:", response.data);
-
-      console.log("Courses fetched: ", response.data.course);
       setCourses(response.data.course);
       setLoading(false);
     } catch (error) {
@@ -55,6 +51,7 @@ useEffect(() => {
 
   fetchCourses();
 }, [token, navigate]);
+
 
 
   const handleDelete = async (id) => {

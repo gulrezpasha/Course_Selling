@@ -110,6 +110,8 @@ export const getCourse=async(req,res)=>{
     try {
         const course=await Course.find({});
         res.status(201).json({course});
+        // console.log("Response after creating course:", course);
+
     } catch (error) {
         res.status(404).json({errors:"error in getting course"});
         console.log("fail to get courses",error);
@@ -220,31 +222,55 @@ export const courseDetails=async (req,res) => {
 
 
 
+
 export const buyCourse = async (req, res) => {
   try {
-    const userId = req.user._id;
-    const courseId = req.params.id;
+    console.log("🔐 Token from headers:", req.headers.authorization);
+
+    console.log("User from req:", req.user);
+    const userId = req.userId;
+
+    console.log("UserId:", userId);
+
+    const courseId = req.params.courseId;
+    console.log("CourseId:", courseId);
+
     const { demo } = req.body;
-
-    // If it's a demo purchase, simulate success
     if (demo) {
-      console.log("✅ Demo purchase detected");
-      return res.status(200).json({ message: "Demo purchase simulated successfully" });
-    }
+  console.log("✅ Demo purchase detected");
 
-    // Check if course exists
+  // Check if demo purchase already exists
+  const existingPurchase = await Purchase.findOne({ user: userId, course: courseId });
+  if (existingPurchase) {
+    return res.status(400).json({ message: "Course already purchased (demo)" });
+  }
+
+  // Save demo purchase in DB
+  const purchase = new Purchase({
+    user: userId,
+    course: courseId,
+    paymentMethod: "demo",
+    paymentStatus: "completed",
+    isDemo: true // optional flag for demo purchases
+  });
+  await purchase.save();
+
+  return res.status(200).json({ message: "Demo purchase saved successfully" });
+}
+
+
     const course = await Course.findById(courseId);
+    console.log("Found course:", course);
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
 
-    // Check if already purchased
     const existingPurchase = await Purchase.findOne({ user: userId, course: courseId });
+    console.log("Existing purchase:", existingPurchase);
     if (existingPurchase) {
       return res.status(400).json({ message: "Course already purchased" });
     }
 
-    // Create actual purchase entry (for real payment flow)
     const purchase = new Purchase({
       user: userId,
       course: courseId,
@@ -259,5 +285,3 @@ export const buyCourse = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
-

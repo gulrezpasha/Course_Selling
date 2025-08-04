@@ -20,22 +20,45 @@ function Dashboard() {
 
 // const token = localStorage.getItem("admin");
 
+// const handleLogout = async () => {
+// const token = localStorage.getItem("token"); // not admin
+
+// axios.get(`${BASE_URL}/admin/logout`, {
+//   headers: {
+//     Authorization: `Bearer ${token}`,
+//   },
+//   withCredentials: true,
+// })
+// .then(() => {
+//   // cleanup localStorage and redirect
+// })
+// .catch(err => console.error(err));
+
+
+// };
+
 const handleLogout = async () => {
-const token = localStorage.getItem("token"); // not admin
+  const token = localStorage.getItem("admin"); // Corrected: fetch admin token
 
-axios.get(`${BASE_URL}/admin/logout`, {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-  withCredentials: true,
-})
-.then(() => {
-  // cleanup localStorage and redirect
-})
-.catch(err => console.error(err));
+  try {
+    const response = await axios.get(`${BASE_URL}/admin/logout`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    });
 
-
+    toast.success(response.data.message);
+    localStorage.removeItem("admin");
+    window.location.href = "/admin/login"; // or use navigate
+  } catch (error) {
+    console.error("Logout error:", error);
+    toast.error(
+      error.response?.data?.errors || "Error during admin logout"
+    );
+  }
 };
+
 
 
   return (
@@ -63,14 +86,23 @@ axios.get(`${BASE_URL}/admin/logout`, {
               Home
             </button>
           </Link>
-          <Link to="/admin/login">
+          {/* <Link to="/admin/login">
             <button
               onClick={handleLogout}
               className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded"
             >
               Logout
             </button>
-          </Link>
+          </Link> */}
+
+<button
+  onClick={handleLogout}
+  className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded"
+>
+  Logout
+</button>
+
+
         </nav>
       </div>
       <div className="flex h-screen items-center justify-center ml-[40%]">

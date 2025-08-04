@@ -139,21 +139,123 @@ export const logout = async (req, res) => {
 };
 
 
-export const purchases=async (req,res)=>{
-    const userId=req.userId;
-    try {
-        const purchased=await Purchase.find({userId});
-        let purchasedCourseId=[];
-        for(let i=0; i<purchased.length; i++){
-            purchasedCourseId.push(purchased[i].courseId);
-        }
-        const courseData=await Course.find({
-            _id:{$in:purchasedCourseId}
-        });
-        res.status(200).json({purchased,courseData});
-    } catch (error) {
-        console.log("Error fetching purchases:", error.message);
-    res.status(500).json({ error: "Something went wrong" });
-    }
-}
+// export const purchases=async (req,res)=>{
+//     const userId=req.userId;
+//     try {
+//         const purchased=await Purchase.find({userId});
+//         let purchasedCourseId=[];
+//         for(let i=0; i<purchased.length; i++){
+//             purchasedCourseId.push(purchased[i].courseId);
+//         }
+//         const courseData=await Course.find({
+//             _id:{$in:purchasedCourseId}
+//         });
+//         res.status(200).json({purchased,courseData});
+//     } catch (error) {
+//         console.log("Error fetching purchases:", error.message);
+//     res.status(500).json({ error: "Something went wrong" });
+//     }
+// }
+
+// export const purchases = async (req, res) => {
+//   const userId = req.userId;
+
+//   try {
+//     // 1. Get all purchases by the logged-in user
+//     const purchased = await Purchase.find({ userId }); // or { userId: userId }
+
+//     // 2. Extract courseId from each purchase
+//     const purchasedCourseIds = purchased.map(p => p.courseId);
+
+//     // 3. Find courses using those courseIds
+//     const courseData = await Course.find({ _id: { $in: purchasedCourseIds } });
+
+//     // 4. Send back the data
+//     res.status(200).json({ purchased, courseData });
+//   } catch (error) {
+//     console.error("Error fetching purchases:", error.message);
+//     res.status(500).json({ error: "Something went wrong" });
+//   }
+// };
+
+
+
+// export const purchases = async (req, res) => {
+//   try {
+//     const userId = req.user._id; // this should come from JWT middleware
+//     const { courseId } = req.body;
+
+//     if (!courseId) {
+//       return res.status(400).json({ success: false, message: "Course ID is required" });
+//     }
+
+//     const alreadyPurchased = await Purchase.findOne({ userId, courseId });
+//     if (alreadyPurchased) {
+//       return res.status(200).json({ success: true, message: "Course already purchased" });
+//     }
+
+//     const purchase = await Purchase.create({
+//       userId,
+//       courseId,
+//     });
+
+//     res.status(201).json({
+//       success: true,
+//       message: "Purchase successful",
+//       purchase,
+//     });
+//   } catch (error) {
+//     console.error("Purchase error:", error);
+//     res.status(500).json({ success: false, message: "Something went wrong" });
+//   }
+// };
+
+
+// export const purchases = async (req, res) => {
+//   try {
+//     const userId = req.user._id;
+
+//     // Find all purchases for this user and populate course details
+//     const purchases = await Purchase.find({ userId })
+//       .populate('courseId')  // Populate course details instead of just ID
+//       .exec();
+
+//     res.status(200).json({
+//       success: true,
+//       courseData: purchases.map(purchase => purchase.courseId), // send array of courses
+//     });
+//   } catch (error) {
+//     console.error("Purchase fetch error:", error);
+//     res.status(500).json({ success: false, message: "Something went wrong" });
+//   }
+// };
+
+
+export const purchases = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const purchases = await Purchase.find({ userId })
+      .populate('courseId')
+      .exec();
+
+    console.log("Fetched purchases with populated courses:", purchases);
+
+    const courseData = purchases
+      .map(purchase => purchase.courseId)
+      .filter(course => course != null);
+
+    res.status(200).json({
+      success: true,
+      courseData,
+    });
+  } catch (error) {
+    console.error("Purchase fetch error:", error);
+    res.status(500).json({ success: false, message: "Something went wrong" });
+  }
+};
+
+
+
+
 
