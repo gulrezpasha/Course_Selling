@@ -39,7 +39,7 @@ function Buy() {
 
     try {
       const { data } = await axios.post(
-        `${BASE_URL}/api/v1/course/buyCourse/${courseId}`,
+        `${BASE_URL}/course/buyCourse/${courseId}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
