@@ -15,6 +15,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.jpg';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { BASE_URL } from '../utils/utils';
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -31,18 +32,11 @@ function Signup() {
       [e.target.name]: e.target.value
     }));
   };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log("Signup data:", formData);
-  //   // You can now send data to backend API using axios.post()
-  // };
-
   const handleSubmit = async (e) => {
   e.preventDefault();
 
   try {
-    const response = await axios.post('http://localhost:4001/api/v1/user/signup', formData);
+    const response = await axios.post(`${BASE_URL}/user/signup`, formData);
     console.log("Server Response:", response.data);
 
     // Show success message or redirect

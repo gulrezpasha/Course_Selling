@@ -40,35 +40,6 @@ if(!validateData.success){
     }
 }
 
-// export const login=async(req,res)=>{
-//     const {email,password}=req.body;
-//     try {
-//         const user=await User.findOne({email:email});
-//         const ispasswordcorrect=await bcrypt.compare(password,user.password);
-
-//         if (!user || !ispasswordcorrect){
-//            return  res.status(403).json({errors:"Invalid Credentials"});
-//         }
-// const token=jwt.sign({
-//     id:user._id,
-    
-// },config.JWT_USER_PASSWORD,
-// {expiresIn:"1D"});
-// const cookieOptions={
-//     expires:new Date(Date.now()+24*60*1000),  // 1 day
-//     httpOnly:true, // can't be accessed via js directly
-//     secure:process.env.NODE_ENV==="production", // true for https only
-//     sameSite:"Strict" // CSRF attacks
-// };
-// res.cookie("jwt",token);
-//         res.status(201).json({message:"login suuccessfull",user,token});
-//     } catch (error) {
-//         res.status(403).json({errors:"Error in login"})
-//         console.log("error in login",error);
-//     }
-// }
-
-
 export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -103,22 +74,6 @@ export const login = async (req, res) => {
   }
 };
 
-
-
-// export const logout=async(req,res)=>{
-//     try {
-//         if(!req.cookies.jwt){
-//      return res.status(403).json({errors:"please login first"});
-//         }
-//         res.clearCookie("jwt");
-//         res.status(201).json({message:"log Out successfully"});
-//     } catch (error) {
-//         res.status(403).json({errors:"error in logout"});
-//         console.log("error in logout",error);
-//     }
-// }
-
-
 export const logout = async (req, res) => {
   try {
     if (!req.cookies?.jwt) {
@@ -138,122 +93,24 @@ export const logout = async (req, res) => {
   }
 };
 
-
-// export const purchases=async (req,res)=>{
-//     const userId=req.userId;
-//     try {
-//         const purchased=await Purchase.find({userId});
-//         let purchasedCourseId=[];
-//         for(let i=0; i<purchased.length; i++){
-//             purchasedCourseId.push(purchased[i].courseId);
-//         }
-//         const courseData=await Course.find({
-//             _id:{$in:purchasedCourseId}
-//         });
-//         res.status(200).json({purchased,courseData});
-//     } catch (error) {
-//         console.log("Error fetching purchases:", error.message);
-//     res.status(500).json({ error: "Something went wrong" });
-//     }
-// }
-
-// export const purchases = async (req, res) => {
-//   const userId = req.userId;
-
-//   try {
-//     // 1. Get all purchases by the logged-in user
-//     const purchased = await Purchase.find({ userId }); // or { userId: userId }
-
-//     // 2. Extract courseId from each purchase
-//     const purchasedCourseIds = purchased.map(p => p.courseId);
-
-//     // 3. Find courses using those courseIds
-//     const courseData = await Course.find({ _id: { $in: purchasedCourseIds } });
-
-//     // 4. Send back the data
-//     res.status(200).json({ purchased, courseData });
-//   } catch (error) {
-//     console.error("Error fetching purchases:", error.message);
-//     res.status(500).json({ error: "Something went wrong" });
-//   }
-// };
-
-
-
-// export const purchases = async (req, res) => {
-//   try {
-//     const userId = req.user._id; // this should come from JWT middleware
-//     const { courseId } = req.body;
-
-//     if (!courseId) {
-//       return res.status(400).json({ success: false, message: "Course ID is required" });
-//     }
-
-//     const alreadyPurchased = await Purchase.findOne({ userId, courseId });
-//     if (alreadyPurchased) {
-//       return res.status(200).json({ success: true, message: "Course already purchased" });
-//     }
-
-//     const purchase = await Purchase.create({
-//       userId,
-//       courseId,
-//     });
-
-//     res.status(201).json({
-//       success: true,
-//       message: "Purchase successful",
-//       purchase,
-//     });
-//   } catch (error) {
-//     console.error("Purchase error:", error);
-//     res.status(500).json({ success: false, message: "Something went wrong" });
-//   }
-// };
-
-
-// export const purchases = async (req, res) => {
-//   try {
-//     const userId = req.user._id;
-
-//     // Find all purchases for this user and populate course details
-//     const purchases = await Purchase.find({ userId })
-//       .populate('courseId')  // Populate course details instead of just ID
-//       .exec();
-
-//     res.status(200).json({
-//       success: true,
-//       courseData: purchases.map(purchase => purchase.courseId), // send array of courses
-//     });
-//   } catch (error) {
-//     console.error("Purchase fetch error:", error);
-//     res.status(500).json({ success: false, message: "Something went wrong" });
-//   }
-// };
-
-
 export const purchases = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user?.id;
 
-    const purchases = await Purchase.find({ userId })
-      .populate('courseId')
-      .exec();
+    // Step 1: Get all purchases of this user
+    const purchases = await Purchase.find({ userId }).populate("courseId");
+    // console.log("Fetched purchases with populated courses:", purchases);
 
-    console.log("Fetched purchases with populated courses:", purchases);
+    // Step 2: Extract the actual course data
+    const purchasedCourses = purchases.map((purchase) => purchase.courseId);
 
-    const courseData = purchases
-      .map(purchase => purchase.courseId)
-      .filter(course => course != null);
-
-    res.status(200).json({
-      success: true,
-      courseData,
-    });
+    return res.status(200).json(purchasedCourses);
   } catch (error) {
-    console.error("Purchase fetch error:", error);
-    res.status(500).json({ success: false, message: "Something went wrong" });
+    console.error("Error fetching purchased courses:", error);
+    return res.status(500).json({ message: "Failed to fetch purchased courses" });
   }
 };
+
 
 
 

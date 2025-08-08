@@ -68,20 +68,6 @@ res.cookie("jwt",token);
     }
 }
 
-// export const logout=async(req,res)=>{
-//     try {
-//         if(!req.cookies.jwt){
-//      return res.status(403).json({errors:"please login first"});
-//         }
-//         res.clearCookie("jwt");
-//         res.status(201).json({message:"log Out successfully"});
-//     } catch (error) {
-//         res.status(403).json({errors:"error in logout"});
-//         console.log("error in logout",error);
-//     }
-// }
-
-
 export const logout = async (req, res) => {
   try {
     const authHeader = req.headers.authorization;

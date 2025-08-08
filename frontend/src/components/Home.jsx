@@ -11,6 +11,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import axios from 'axios';
 import Slider from "react-slick";
 import toast from "react-hot-toast";
+import { BASE_URL } from "../utils/utils";
 
 function Home() {
     const [courses, setCourses] = useState([]);
@@ -39,7 +40,7 @@ useEffect(() => {
     
   const fetchCourses = async () => {
     try {
-      const response = await axios.get("http://localhost:4001/api/v1/course/courses", {
+      const response = await axios.get(`${BASE_URL}/course/courses`, {
         withCredentials: true,
       });
       console.log(response.data.course); // ✅ verify this in console

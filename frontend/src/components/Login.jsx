@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.jpg';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { BASE_URL } from '../utils/utils';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -25,7 +26,7 @@ function Login() {
     setErrorMsg(""); // Clear previous error
 
     try {
-      const response = await axios.post('http://localhost:4001/api/v1/user/login', formData);
+      const response = await axios.post(`${BASE_URL}/user/login`, formData);
      console.log("Login Success:", response.data); 
       toast.success("Login Success");
 localStorage.setItem("token", response.data.token); // ✅ Save token

@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-
-
 const adminSchema=new mongoose.Schema({
     firstName:{
         type:String,
