@@ -20,7 +20,7 @@ function Buy() {
     const fetchCourse = async () => {
       try {
         const { data } = await axios.get(
-          `${BASE_URL}/v1/course/${courseId}`
+          `${BASE_URL}/course/${courseId}`
         );
         
 
@@ -71,7 +71,7 @@ const handleDemoPurchase = async (courseId) => {
     }
 
     await axios.post(
-      `${BASE_URL}/api/v1/course/buyCourse/${courseId}`,
+      `${BASE_URL}/course/buyCourse/${courseId}`,
       { demo: true },
       { headers: { Authorization: `Bearer ${token}` } }
     );
