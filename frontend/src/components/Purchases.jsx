@@ -154,7 +154,7 @@ useEffect(() => {
   );
 }
 
-export default Purchases;
+export default Purchases
 
 
 
