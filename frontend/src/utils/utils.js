@@ -1,3 +1,3 @@
 // src/utils.js
 
-export const BASE_URL = "http://localhost:4001/api/v1";
+export const BASE_URL = "https://course-app-hh9a.onrender.com/";
