@@ -113,8 +113,9 @@ const handleDemoPurchase = async (courseId) => {
           </span>
           <span className="text-sm text-gray-500 ml-2">one-time payment</span>
         </div>
-
+        console.log("PayPal Client ID:", JSON.stringify(import.meta.env.VITE_PAYPAL_CLIENT_ID));
         {!demoMode && (
+          
           <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID }}>
             <PayPalButtons
               style={{ layout: "horizontal", color: "gold", shape: "rect" }}

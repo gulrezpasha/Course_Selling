@@ -28,13 +28,27 @@ app.use(fileUpload({
     useTempFiles : true,
     tempFileDir : '/tmp/'
 }));
-app.use(cors({
-     origin:process.env.FRONTEND_URL,
-     credentials:true,
-     methods:["GET","POST","DELETE","PUT"],
-     allowedHeaders:["Content-Type","Authorization"],
+// app.use(cors({
+//      origin:process.env.FRONTEND_URL,
+//      credentials:true,
+//      methods:["GET","POST","DELETE","PUT"],
+//      allowedHeaders:["Content-Type","Authorization"],
      
-}))
+// }))
+
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://course-selling-ochre.vercel.app"
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "DELETE", "PUT"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+
+
+
 
 app.use("/api/v1/course",courseRoute);
 app.use("/api/v1/user",userRoute);
