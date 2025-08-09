@@ -8,7 +8,7 @@ A full-stack course marketplace app with payment integration, user authenticatio
 
 ## Live Demo
 
-[View Live Project](https://course-selling-five.vercel.app)
+[View Live Project](https://course-selling-ochre.vercel.app)
 
 ---
 
@@ -21,6 +21,7 @@ A full-stack course marketplace app with payment integration, user authenticatio
 - Responsive UI
 
 ---
+
 
 
 
